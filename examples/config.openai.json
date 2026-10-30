@@ -1,0 +1,10 @@
+{
+  "embedder": {
+    "provider": "openai",
+    "model": "text-embedding-3-small",
+    "dim": 1536,
+    "base_url": "https://api.openai.com/v1",
+    "api_key_env": "OPENAI_API_KEY",
+    "batch_size": 32
+  }
+}

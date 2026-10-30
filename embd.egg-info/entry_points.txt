@@ -1,0 +1,2 @@
+[console_scripts]
+embd = embd.cli:main

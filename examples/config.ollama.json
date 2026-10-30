@@ -1,0 +1,13 @@
+{
+  "embedder": {
+    "provider": "ollama",
+    "model": "nomic-embed-text",
+    "dim": 768,
+    "base_url": "http://127.0.0.1:11434",
+    "batch_size": 16
+  },
+  "watch": {
+    "enabled": true,
+    "interval_seconds": 5
+  }
+}

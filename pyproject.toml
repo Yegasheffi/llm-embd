@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "embd"
+version = "0.1.0"
+description = "Local incremental embedding daemon for RAG: mtime + content hash + content-defined chunk alignment"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "embd contributors" }]
+dependencies = ["numpy>=1.23"]
+keywords = ["rag", "embeddings", "incremental", "sqlite", "local-first"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Operating System :: MacOS",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Database :: Database Engines/SQLite",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Text Processing :: Indexing",
+]
+
+[project.optional-dependencies]
+pdf = ["pypdf>=4"]
+dev = ["build>=1.2", "pytest>=7"]
+
+[project.scripts]
+embd = "embd.cli:main"
+
+[tool.setuptools]
+packages = ["embd", "embd.static"]
+
+[tool.setuptools.package-data]
+embd = ["static/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

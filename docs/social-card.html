@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>embd social preview</title>
+<style>
+  :root {
+    --paper: #f2efe7;
+    --paper-2: #faf8f2;
+    --ink: #17211c;
+    --muted: #71776f;
+    --line: #d5d0c2;
+    --accent: #de5b36;
+    --lime: #dce8a7;
+    --teal: #1d6a57;
+    --mono: "SFMono-Regular", "SF Mono", Menlo, monospace;
+    --serif: "Songti SC", "Noto Serif SC", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1280px; height: 640px; overflow: hidden; }
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background:
+      radial-gradient(700px 420px at 85% -10%, rgba(220, 232, 167, .58), transparent 65%),
+      radial-gradient(640px 400px at 5% 105%, rgba(222, 91, 54, .13), transparent 60%),
+      var(--paper);
+  }
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(23,33,28,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(23,33,28,.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(to bottom, #000, transparent 100%);
+  }
+  .card { position: relative; width: 100%; height: 100%; padding: 48px 64px 40px; }
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .mark { position: relative; width: 42px; height: 42px; }
+  .mark i { position: absolute; width: 25px; height: 25px; border: 1.5px solid var(--ink); border-radius: 6px; background: var(--paper-2); }
+  .mark i:nth-child(1) { left: 0; top: 0; background: var(--ink); }
+  .mark i:nth-child(2) { left: 8px; top: 8px; background: var(--lime); }
+  .mark i:nth-child(3) { left: 17px; top: 17px; }
+  .brand strong { display: block; font-size: 30px; letter-spacing: -.05em; line-height: .9; }
+  .brand small { display: block; margin-top: 7px; font-family: var(--mono); font-size: 9px; letter-spacing: .16em; color: var(--muted); text-transform: uppercase; }
+  .meta { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .08em; text-align: right; }
+  .meta b { color: var(--ink); font-weight: 600; }
+  .main { display: grid; grid-template-columns: 1.35fr .8fr; gap: 54px; align-items: center; margin-top: 58px; }
+  .kicker { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; font-family: var(--mono); font-size: 10px; letter-spacing: .18em; color: var(--muted); }
+  .kicker::before { content: ""; width: 34px; height: 1px; background: var(--accent); }
+  h1 { margin: 0; font-family: var(--serif); font-size: 82px; line-height: 1.03; letter-spacing: -.06em; font-weight: 600; }
+  h1 em { position: relative; z-index: 0; font-style: normal; color: var(--accent); white-space: nowrap; }
+  h1 em::after { content: ""; position: absolute; z-index: -1; left: 0; right: 2%; bottom: 7px; height: 12px; background: var(--lime); transform: skewX(-7deg); border-radius: 2px; }
+  .sub { margin: 24px 0 0; font-size: 17px; color: #33413a; line-height: 1.7; }
+  .sub b { color: var(--ink); font-weight: 600; }
+  .pipeline { display: flex; align-items: center; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+  .pill { border: 1px solid var(--line); background: rgba(250,248,242,.7); border-radius: 99px; padding: 6px 11px; font-family: var(--mono); font-size: 10px; color: #33413a; }
+  .arrow { color: #a9a598; font-family: var(--mono); font-size: 11px; }
+  .terminal {
+    background: #111b16; color: #d9e2d8; border-radius: 16px; padding: 18px 22px 20px;
+    box-shadow: 0 30px 60px -28px rgba(23,33,28,.6); transform: rotate(-1.4deg);
+  }
+  .term-top { display: flex; align-items: center; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid rgba(250,248,242,.12); }
+  .term-top i { width: 7px; height: 7px; border-radius: 50%; background: #59675d; }
+  .term-top i:nth-child(1) { background: #de5b36; }
+  .term-top i:nth-child(2) { background: #dce8a7; }
+  .term-top span { margin-left: 6px; font-family: var(--mono); font-size: 9px; color: #7d8d81; }
+  .term-body { padding-top: 16px; font-family: var(--mono); font-size: 12px; line-height: 1.9; }
+  .term-body .dim { color: #7d8d81; }
+  .term-body .num { color: #dce8a7; }
+  .term-body .big { display: flex; align-items: baseline; gap: 10px; margin-top: 10px; padding-top: 12px; border-top: 1px solid rgba(250,248,242,.12); }
+  .term-body .big b { font-family: var(--serif); font-size: 40px; line-height: 1; color: var(--lime); letter-spacing: -.04em; }
+  .term-body .big span { font-size: 10px; color: #a9b8ac; letter-spacing: .06em; }
+  .bottom { position: absolute; left: 64px; right: 64px; bottom: 34px; display: flex; justify-content: space-between; align-items: center; padding-top: 18px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .05em; }
+  .bottom .right { display: flex; gap: 20px; }
+  .bottom b { color: var(--teal); font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="card">
+    <div class="top">
+      <div class="brand">
+        <span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><strong>embd</strong><small>incremental embedding daemon</small></span>
+      </div>
+      <div class="meta"><b>v0.1.0</b> · MIT · local-first</div>
+    </div>
+
+    <div class="main">
+      <div>
+        <p class="kicker">LOCAL-FIRST RAG INFRASTRUCTURE</p>
+        <h1>文件只重建<br><em>变化的部分</em>。</h1>
+        <p class="sub">一个常驻本地的增量 embedding 索引层。<br><b>mtime → SHA-256 → CDC 分块对齐</b>，任何 App 通过 HTTP 使用。</p>
+        <div class="pipeline">
+          <span class="pill">stat</span><span class="arrow">→</span>
+          <span class="pill">content hash</span><span class="arrow">→</span>
+          <span class="pill">aligned chunks</span><span class="arrow">→</span>
+          <span class="pill">reuse vectors</span>
+        </div>
+      </div>
+
+      <div class="terminal">
+        <div class="term-top"><i></i><i></i><i></i><span>embd bench</span></div>
+        <div class="term-body">
+          <div><span class="dim">documents</span> <span class="num">60</span> <span class="dim">(edited 12)</span></div>
+          <div><span class="dim">initial embeddings</span> <span class="num">272</span></div>
+          <div><span class="dim">recomputed after edits</span> <span class="num">12</span></div>
+          <div class="big"><b>95.6%</b><span>EMBEDDINGS<br>SAVED</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <span><b>embd</b> — Python 3.10+ · SQLite FTS5 · HTTP API</span>
+      <span class="right"><span>mtime</span><span>content hash</span><span>CDC</span><span>local</span></span>
+    </div>
+  </div>
+</body>
+</html>
